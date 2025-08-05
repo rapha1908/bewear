@@ -37,20 +37,21 @@ export const productTable = pgTable("products", {
   // Referência para a categoria do produto (chave estrangeira)
   categoryId: uuid("category_id").references(() => categoryTable.id),
 });
-
+// Tabela de variantes de produtos - armazena informações das variantes de produtos
 export const ProductVarianteTable = pgTable("product_variants", {
   id: uuid("id").primaryKey().defaultRandom(),
   productId: uuid("product_id").references(() => productTable.id),
   name: text("name").notNull(),
   slug: text("slug").notNull().unique(),
   priceInCoins: integer("price_in_coins").notNull(),
+  color: text("color").notNull(),
   imageUrl: text("image_url").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 // Relacionamentos da tabela de produtos
 // Define que um produto pertence a uma categoria específica
-export const productRelations = relations(productTable, ({ one }) => ({
+export const productRelations = relations(productTable, ({ one, many }) => ({
   // Um produto pertence a uma única categoria (relacionamento N:1)
   category: one(categoryTable, {
     // Campo na tabela de produtos que faz a referência
@@ -58,4 +59,16 @@ export const productRelations = relations(productTable, ({ one }) => ({
     // Campo na tabela de categorias que é referenciado
     references: [categoryTable.id],
   }),
+  variants: many(ProductVarianteTable),
 }));
+
+// Relacionamentos da tabela de variantes de produtos
+export const ProductVarianteRelations = relations(
+  ProductVarianteTable,
+  ({ one }) => ({
+    product: one(productTable, {
+      fields: [ProductVarianteTable.productId],
+      references: [productTable.id],
+    }),
+  }),
+);
