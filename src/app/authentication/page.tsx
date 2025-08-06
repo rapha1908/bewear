@@ -1,3 +1,5 @@
+"use client";
+
 import { AppWindowIcon, CodeIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -13,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import SignInForm from "./components/sign-in-form";
 export function Authentication() {
   return (
     <div className="flex w-full max-w-sm flex-col gap-6 p-5">
@@ -22,27 +25,7 @@ export function Authentication() {
           <TabsTrigger value="sign-up">Criar Conta</TabsTrigger>
         </TabsList>
         <TabsContent value="sign-in">
-          <Card>
-            <CardHeader>
-              <CardTitle>Entrar</CardTitle>
-              <CardDescription>
-                Seja bem vindo novamente e comece a explorar nossos produtos.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-6">
-              <div className="grid gap-3">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" placeholder="youremail@gmail.com" />
-              </div>
-              <div className="grid gap-3">
-                <Label htmlFor="password">Senha</Label>
-                <Input id="password" placeholder="Senha" type="password" />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button>Entrar</Button>
-            </CardFooter>
-          </Card>
+          <SignInForm />
         </TabsContent>
         <TabsContent value="sign-up">
           <Card>
