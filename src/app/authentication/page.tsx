@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import SignInForm from "./components/sign-in-form";
+import SignUpForm from "./components/sign-up-form";
 export function Authentication() {
   return (
     <div className="flex w-full max-w-sm flex-col gap-6 p-5">
@@ -28,36 +29,8 @@ export function Authentication() {
           <SignInForm />
         </TabsContent>
         <TabsContent value="sign-up">
-          <Card>
-            <CardHeader>
-              <CardTitle>Criar Conta</CardTitle>
-              <CardDescription>
-                Crie uma nova conta gratuita e comece a explorar nossos
-                produtos.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-6">
-              <div className="grid gap-3">
-                <Label htmlFor="name">Nome</Label>
-                <Input id="name" type="text" />
-              </div>
-              <div className="grid gap-3">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" />
-              </div>
-              <div className="grid gap-3">
-                <Label htmlFor="password">Senha</Label>
-                <Input id="password" type="password" />
-              </div>
-              <div className="grid gap-3">
-                <Label htmlFor="confirmPassword">Confirme Senha</Label>
-                <Input id="confirmPassword" type="password" />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button>Crie sua conta</Button>
-            </CardFooter>
-          </Card>
+          <SignUpForm />
+          
         </TabsContent>
       </Tabs>
     </div>
