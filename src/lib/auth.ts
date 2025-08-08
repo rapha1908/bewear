@@ -14,13 +14,13 @@ export const auth = betterAuth({
         provider: "pg",
         schema
     }),
-    users: {
+    user: {
         modelName: "userTable",
     },
   session: {
     modelName: "sessionTable",
   },
-  accounts: {
+  account: {
     modelName: "accountTable",
   }
 });
