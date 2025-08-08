@@ -2,6 +2,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
+import { useRouter } from 'next/navigation'
+
+import { authClient } from "@/lib/auth-client";
+
+import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button";
 import {
@@ -42,6 +47,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 
 const SignupForm = () => {
+  const router = useRouter();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,10 +59,22 @@ const SignupForm = () => {
   });
 
 
-    function onSubmit(values: FormValues) {
-        console.log("FORMULARIO ENVIADO COM ÉXITO! ^^");
-        console.log(values)
-    }
+   async function onSubmit(values: FormValues) {
+     const { data, error } = await authClient.signUp.email({
+       name: values.name, // required
+       email: values.email, // required
+       password: values.password,
+       fetchOptions: {
+        onSuccess:() => {
+          router.push("/");
+        },
+        onError: (error) => {
+          toast.error("Não foi possível cadastrar-se: " + error.message);
+        }
+       }
+     }
+    );
+     }
 
   return(
     <>
