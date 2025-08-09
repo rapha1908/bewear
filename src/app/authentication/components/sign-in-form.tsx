@@ -80,6 +80,22 @@ const SignInForm = () => {
   });
 }
 
+  const handleSignInWithGoogle = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/");
+        },
+        onError: (contexto) => {
+          toast.error(contexto.error.message);
+        },
+      },
+    });
+  };
+
+
+
   return(
     <>
     <Card>
@@ -120,8 +136,9 @@ const SignInForm = () => {
                       )}
                       />
                         </CardContent>
-                        <CardFooter>
-                          <Button type="submit">Entrar</Button>
+                        <CardFooter className="flex flex-col">
+                          <Button type="submit" className="w-full">Entrar</Button>
+                          <Button variant="ghost" className="w-full" onClick={handleSignInWithGoogle} type="button">Entrar com o Google</Button>
                         </CardFooter>
                     </form>
                 </Form>
