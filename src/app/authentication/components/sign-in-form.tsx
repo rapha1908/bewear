@@ -1,6 +1,8 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from 'next/navigation'
 import { useForm } from "react-hook-form";
+import { toast } from "sonner"
 import z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -21,6 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
 
 
 
@@ -33,6 +36,7 @@ type SignInFormValues = z.infer<typeof formSchema>;
 
 
 const SignInForm = () => {
+  const router = useRouter();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,10 +46,39 @@ const SignInForm = () => {
   });
 
 
-    function onSubmit(values: FormValues) {
-        console.log("FORMULARIO ENVIADO COM ÉXITO! ^^");
-        console.log(values)
-    }
+   async function onSubmit(values: FormValues) {
+  await authClient.signIn.email({
+    email: values.email,
+    password: values.password,
+    fetchOptions: {
+      onSuccess: () => {
+        router.push("/");
+      },
+      onError: (contexto) => {
+        console.log("Código de erro:", contexto.error.code);
+
+      if (contexto.error.code === "USER_NOT_FOUND" || contexto.error.message.includes("User not found")) {
+        toast.error("E-mail não encontrado.");
+        return form.setError("email", {
+          message: "E-mail não encontrado.",
+        });
+      }
+
+      if (contexto.error.code === "INVALID_EMAIL_OR_PASSWORD" || contexto.error.message.includes("Invalid email or password")) {
+        toast.error("E-mail ou senha inválidos.");
+        form.setError("email", {
+          message: "E-mail ou senha inválidos.",
+        });
+        return form.setError("password", {
+          message: "E-mail ou senha inválidos.",
+        });
+      }
+
+        toast.error(contexto.error.message);
+      },
+    },
+  });
+}
 
   return(
     <>

@@ -1,12 +1,9 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import z from "zod";
 import { useRouter } from 'next/navigation'
-
-import { authClient } from "@/lib/auth-client";
-
+import { useForm } from "react-hook-form";
 import { toast } from "sonner"
+import z from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
 
 
 
@@ -61,20 +59,23 @@ const SignupForm = () => {
 
    async function onSubmit(values: FormValues) {
      const { data, error } = await authClient.signUp.email({
-       name: values.name, // required
-       email: values.email, // required
+       name: values.name,
+       email: values.email,
        password: values.password,
        fetchOptions: {
-        onSuccess:() => {
-          router.push("/");
-        },
-        onError: (error) => {
-          toast.error("Não foi possível cadastrar-se: " + error.message);
-        }
+         onSuccess: () => {
+           router.push("/");
+         },
+         onError: (error) => {
+           if (error.error.code === "USER_ALREADY_EXISTS") {
+             toast.error("Email ja cadastrado");
+           } else {
+             toast.error("Não foi possível cadastrar-se: " + error.error.message);
+           }
+         }
        }
-     }
-    );
-     }
+     });
+   }
 
   return(
     <>
